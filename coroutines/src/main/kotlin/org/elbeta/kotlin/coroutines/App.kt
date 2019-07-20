@@ -3,13 +3,23 @@
  */
 package org.elbeta.kotlin.coroutines
 
-class App {
-    val greeting: String
-        get() {
-            return "Hello world."
-        }
-}
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
-fun main(args: Array<String>) {
-    println(App().greeting)
+fun main(args: Array<String>) = runBlocking<Unit> {
+    var job = GlobalScope.launch {
+        delay(1000L)
+        println("World in launch ${Thread.currentThread().id}")
+    }
+
+    thread {
+        TimeUnit.MILLISECONDS.sleep(1000)
+        println("World in thread ${Thread.currentThread().id}")
+    }
+    println("Hello")
+    job.join()
 }
